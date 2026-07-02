@@ -99,7 +99,8 @@ scan_state = {
     'processed': 0,
     'error': None,
     'done': False,
-    'log': []
+    'log': [],
+    'stop_requested': False
 }
 
 def get_credentials():
@@ -452,6 +453,10 @@ def do_scan(start_date_str, user_email, end_date_str=None):
         log(f"נמצאו {len(all_message_ids)} מיילים לבדיקה")
 
         for idx, msg_ref in enumerate(all_message_ids):
+            if scan_state.get('stop_requested'):
+                log("⛔ הסריקה נעצרה על ידי המשתמש")
+                break
+
             scan_state['processed'] = idx + 1
             scan_state['progress'] = int((idx + 1) / max(len(all_message_ids), 1) * 100)
 
@@ -761,7 +766,8 @@ def start_scan():
         'processed': 0,
         'error': None,
         'done': False,
-        'log': []
+        'log': [],
+        'stop_requested': False
     }
 
     thread = threading.Thread(target=do_scan, args=(start_date, 'me', end_date))
@@ -784,6 +790,11 @@ def get_status():
         'done': scan_state['done'],
         'log': scan_state['log'][-20:]
     })
+
+@app.route('/stop', methods=['POST'])
+def stop_scan():
+    scan_state['stop_requested'] = True
+    return jsonify({'status': 'stopping'})
 
 @app.route('/results')
 def get_results():

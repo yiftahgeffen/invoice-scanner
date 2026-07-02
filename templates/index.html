@@ -651,9 +651,12 @@
       <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.5rem">לוג פעילות:</div>
       <div class="log-box" id="log-box"></div>
     </div>
-    <div style="margin-top:1rem;display:flex;gap:0.75rem;flex-wrap:wrap" id="scan-counters">
+    <div style="margin-top:1rem;display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center" id="scan-counters">
       <span class="badge badge-success" id="found-badge">✅ נמצאו: 0</span>
       <span class="badge badge-warn" id="suspicious-badge">⚠️ חשודים: 0</span>
+      <button class="btn btn-danger" id="stop-btn" onclick="stopScan()" style="margin-right:auto;padding:0.5rem 1.1rem;font-size:0.85rem">
+        ⛔ עצור סריקה
+      </button>
     </div>
   </div>
 
@@ -722,6 +725,10 @@ function startScan() {
   document.getElementById('scan-progress').style.display = 'block';
   document.getElementById('scan-btn').disabled = true;
   document.getElementById('log-box').innerHTML = '';
+  const stopBtn = document.getElementById('stop-btn');
+  stopBtn.disabled = false;
+  stopBtn.style.opacity = '1';
+  stopBtn.textContent = '⛔ עצור סריקה';
 
   fetch('/scan', {
     method: 'POST',
@@ -741,6 +748,13 @@ function startScan() {
     alert('שגיאת חיבור: ' + e);
     document.getElementById('scan-btn').disabled = false;
   });
+}
+
+function stopScan() {
+  const btn = document.getElementById('stop-btn');
+  btn.disabled = true;
+  btn.textContent = 'עוצר...';
+  fetch('/stop', {method: 'POST'});
 }
 
 function pollStatus() {
@@ -769,6 +783,9 @@ function pollStatus() {
     if (s.done) {
       clearInterval(scanInterval);
       document.getElementById('scan-btn').disabled = false;
+      const stopBtn = document.getElementById('stop-btn');
+      stopBtn.disabled = true;
+      stopBtn.style.opacity = '0.3';
       if (s.error) {
         alert('שגיאה בסריקה: ' + s.error);
       } else {
