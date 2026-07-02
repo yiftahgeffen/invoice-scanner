@@ -17,6 +17,7 @@ import anthropic
 ANTHROPIC_API_KEY_VALUE = os.environ.get('ANTHROPIC_API_KEY', '')
 
 def load_env():
+    global ANTHROPIC_API_KEY_VALUE
     if ANTHROPIC_API_KEY_VALUE:
         print(f"✅ API Key נטען ({ANTHROPIC_API_KEY_VALUE[:15]}...)")
         return
@@ -30,7 +31,6 @@ def load_env():
                     if line and not line.startswith('#') and '=' in line:
                         key, val = line.split('=', 1)
                         os.environ[key.strip()] = val.strip().strip('"').strip("'")
-            global ANTHROPIC_API_KEY_VALUE
             ANTHROPIC_API_KEY_VALUE = os.environ.get('ANTHROPIC_API_KEY', '')
             print(f"✅ נטען קובץ: {filename}")
             return
