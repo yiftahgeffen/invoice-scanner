@@ -109,7 +109,11 @@ def get_credentials():
             creds = pickle.load(token)
     elif os.environ.get('GOOGLE_TOKEN_B64'):
         # Restore token from environment variable (used on Render free tier - no persistent disk)
-        token_data = base64.b64decode(os.environ['GOOGLE_TOKEN_B64'])
+        token_b64 = os.environ['GOOGLE_TOKEN_B64'].strip()
+        missing = len(token_b64) % 4
+        if missing:
+            token_b64 += '=' * (4 - missing)
+        token_data = base64.b64decode(token_b64)
         with open(TOKEN_FILE, 'wb') as f:
             f.write(token_data)
         with open(TOKEN_FILE, 'rb') as token:
