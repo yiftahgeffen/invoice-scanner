@@ -180,11 +180,10 @@ EXCLUDE_EMAIL_PATTERNS = [
     r'thanks for (starting|joining) your',
 ]
 
-# Patterns in email body that indicate this is an order confirmation, NOT the invoice itself
+# Patterns in email body that indicate this is an order confirmation, NOT the invoice itself.
+# Must be very specific — broad patterns (like "מזהה הזמנה") also appear inside real invoices.
 BODY_EXCLUDE_PATTERNS = [
-    r'מזהה\s*הזמנה',           # "Order ID" in body = order confirmation email
-    r'\border\s+id\s*[\n:]',   # Same in English
-    r'עיין בחשבונית שלך כדי',  # "See your invoice to see the final amount" = invoice is elsewhere
+    r'עיין בחשבונית שלך כדי',  # Microsoft phrasing: "see your invoice to find the final amount"
 ]
 
 # Keywords that are STRONG indicators of an incoming invoice (expense)
