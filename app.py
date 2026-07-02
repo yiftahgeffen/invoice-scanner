@@ -107,6 +107,13 @@ def get_credentials():
     if os.path.exists(TOKEN_FILE):
         with open(TOKEN_FILE, 'rb') as token:
             creds = pickle.load(token)
+    elif os.environ.get('GOOGLE_TOKEN_B64'):
+        # Restore token from environment variable (used on Render free tier - no persistent disk)
+        token_data = base64.b64decode(os.environ['GOOGLE_TOKEN_B64'])
+        with open(TOKEN_FILE, 'wb') as f:
+            f.write(token_data)
+        with open(TOKEN_FILE, 'rb') as token:
+            creds = pickle.load(token)
     if creds and creds.expired and creds.refresh_token:
         creds.refresh(Request())
         with open(TOKEN_FILE, 'wb') as token:
