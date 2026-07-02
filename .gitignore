@@ -1,0 +1,9 @@
+credentials.json
+token.pickle
+downloads/
+scan_results.json
+feedback.json
+__pycache__/
+*.pyc
+env..txt
+.env

@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>סורק חשבוניות | יפתח גפן</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: #2a2a3e;
+    --accent: #6c63ff;
+    --accent2: #ff6584;
+    --accent3: #43e97b;
+    --text: #e8e8f0;
+    --muted: #6b6b8a;
+    --gold: #f5c842;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(108,99,255,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(255,101,132,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 80%, rgba(67,233,123,0.05) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    padding: 3rem 0 2rem;
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .logo-icon {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    box-shadow: 0 0 30px rgba(108,99,255,0.4);
+  }
+
+  h1 {
+    font-size: 2.6rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    font-weight: 300;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 1.8rem;
+    margin-bottom: 1.5rem;
+    transition: border-color 0.3s;
+  }
+
+  .card:hover {
+    border-color: rgba(108,99,255,0.3);
+  }
+
+  .card-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* Auth section */
+  .auth-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent2);
+  }
+
+  .dot.connected {
+    background: var(--accent3);
+    box-shadow: 0 0 12px var(--accent3);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.4rem;
+    border-radius: 10px;
+    font-family: 'Heebo', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #8b5cf6);
+    color: white;
+    box-shadow: 0 4px 20px rgba(108,99,255,0.35);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(108,99,255,0.5);
+  }
+
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .btn-success {
+    background: linear-gradient(135deg, #059669, var(--accent3));
+    color: white;
+    box-shadow: 0 4px 20px rgba(67,233,123,0.3);
+  }
+
+  .btn-success:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+
+  .btn-danger {
+    background: linear-gradient(135deg, #dc2626, var(--accent2));
+    color: white;
+  }
+
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Date input */
+  .input-group {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .input-wrap {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  input[type="date"] {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    color: var(--text);
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+    direction: ltr;
+  }
+
+  input[type="date"]:focus {
+    border-color: var(--accent);
+  }
+
+  /* Progress section */
+  #scan-progress {
+    display: none;
+  }
+
+  .progress-bar-wrap {
+    background: var(--surface2);
+    border-radius: 99px;
+    height: 8px;
+    overflow: hidden;
+    margin: 1rem 0;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 99px;
+    transition: width 0.5s ease;
+    width: 0%;
+    box-shadow: 0 0 10px rgba(108,99,255,0.5);
+  }
+
+  .progress-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  .current-email {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.5rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    direction: rtl;
+  }
+
+  /* Log */
+  .log-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    height: 200px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 0.78rem;
+    color: #7a7a9a;
+    direction: rtl;
+    text-align: right;
+  }
+
+  .log-box p {
+    margin-bottom: 0.2rem;
+    line-height: 1.5;
+  }
+
+  .log-success { color: var(--accent3); }
+  .log-warn { color: var(--gold); }
+  .log-error { color: var(--accent2); }
+
+  /* Results */
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 700px) {
+    .results-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 1.8rem; }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 8px;
+    border-radius: 99px;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .badge-success { background: rgba(67,233,123,0.15); color: var(--accent3); }
+  .badge-warn { background: rgba(245,200,66,0.15); color: var(--gold); }
+
+  /* Invoice items */
+  .invoice-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 500px;
+    overflow-y: auto;
+    padding-left: 0.3rem;
+  }
+
+  .invoice-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .invoice-item:hover {
+    border-color: rgba(108,99,255,0.4);
+    transform: translateX(-2px);
+  }
+
+  .invoice-item.suspicious {
+    border-color: rgba(245,200,66,0.2);
+  }
+
+  .invoice-item.suspicious:hover {
+    border-color: rgba(245,200,66,0.5);
+  }
+
+  .invoice-item .item-subject {
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: var(--text);
+    margin-bottom: 0.3rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .invoice-item .item-meta {
+    font-size: 0.75rem;
+    color: var(--muted);
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .confidence-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+  }
+
+  .conf-bar {
+    flex: 1;
+    height: 3px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .conf-fill {
+    height: 100%;
+    border-radius: 99px;
+  }
+
+  .conf-fill.high { background: var(--accent3); }
+  .conf-fill.mid { background: var(--gold); }
+  .conf-fill.low { background: var(--accent2); }
+
+  .item-actions {
+    display: flex;
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-xs {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.75rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Heebo', sans-serif;
+    font-weight: 600;
+    transition: all 0.15s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .btn-xs-primary { background: rgba(108,99,255,0.2); color: var(--accent); }
+  .btn-xs-primary:hover { background: rgba(108,99,255,0.35); }
+  .btn-xs-warn { background: rgba(245,200,66,0.15); color: var(--gold); }
+  .btn-xs-warn:hover { background: rgba(245,200,66,0.25); }
+  .btn-xs-success { background: rgba(67,233,123,0.15); color: var(--accent3); }
+  .btn-xs-success:hover { background: rgba(67,233,123,0.25); }
+
+  .file-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: rgba(108,99,255,0.1);
+    border: 1px solid rgba(108,99,255,0.2);
+    border-radius: 6px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.72rem;
+    color: var(--accent);
+    margin-top: 0.4rem;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .empty-state {
+    text-align: center;
+    color: var(--muted);
+    padding: 2rem;
+    font-size: 0.88rem;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 1.5rem 0;
+  }
+
+  .instructions-box {
+    background: rgba(108,99,255,0.06);
+    border: 1px solid rgba(108,99,255,0.15);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .instructions-box strong { color: var(--accent); }
+  .instructions-box code {
+    background: var(--surface2);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: var(--text);
+  }
+
+  .step {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    margin-bottom: 0.6rem;
+  }
+
+  .step-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .alert {
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .alert-error { background: rgba(220,38,38,0.1); border: 1px solid rgba(220,38,38,0.3); color: #fca5a5; }
+  .alert-success { background: rgba(67,233,123,0.1); border: 1px solid rgba(67,233,123,0.2); color: var(--accent3); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="logo">
+      <div class="logo-icon">📄</div>
+    </div>
+    <h1>סורק חשבוניות</h1>
+    <p class="subtitle">סריקה אוטומטית של Gmail ⋅ חשבוניות על שם יפתח גפן</p>
+  </header>
+
+  <!-- Auth Card -->
+  <div class="card">
+    <div class="card-title">🔐 חיבור ל-Google</div>
+    <div class="auth-status">
+      <div class="status-indicator">
+        <div class="dot {% if has_auth %}connected{% endif %}"></div>
+        <span>
+          {% if has_auth %}
+            מחובר ל-Gmail בהצלחה
+          {% else %}
+            לא מחובר — נדרשת הרשאת Gmail
+          {% endif %}
+        </span>
+      </div>
+      {% if not has_auth %}
+        <a href="/auth" class="btn btn-primary">🔗 התחבר עם Google</a>
+      {% else %}
+        <a href="/auth" class="btn btn-secondary" style="font-size:0.8rem">🔄 חבר מחדש</a>
+      {% endif %}
+    </div>
+
+    {% if not has_auth %}
+    <div class="divider"></div>
+    <div class="instructions-box">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>ודא שקובץ <strong>credentials.json</strong> נמצא בתיקיית האפליקציה (מ-Google Cloud Console)</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>לחץ "התחבר עם Google" וקבל הרשאה לקריאת Gmail</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>הגדר את תאריך ההתחלה והתחל בסריקה</div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Scan Card -->
+  <div class="card">
+    <div class="card-title">🔍 הגדרות סריקה</div>
+    <div class="input-group">
+      <div class="input-wrap">
+        <label for="start-date">החל מתאריך</label>
+        <input type="date" id="start-date" value="{{ today_minus_90 | default('2025-01-01') }}">
+      </div>
+      <div class="input-wrap">
+        <label for="end-date">עד תאריך (ריק = עד היום)</label>
+        <input type="date" id="end-date">
+      </div>
+      <button class="btn btn-primary" id="scan-btn" onclick="startScan()" {% if not has_auth %}disabled{% endif %}>
+        🚀 התחל סריקה
+      </button>
+    </div>
+  </div>
+
+  <!-- Blocking Rules -->
+  <div class="card" id="rules-card">
+    <div class="card-title">🚫 כללי חסימה — התעלם מאלה</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+      <div>
+        <label>חסום שולח (כתובת או שם)</label>
+        <div style="display:flex;gap:0.5rem;margin-top:0.4rem">
+          <input type="text" id="block-sender-input" placeholder="למשל: newsletter@, תיירות" style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.5rem 0.8rem;color:var(--text);font-family:inherit;font-size:0.85rem;outline:none">
+          <button class="btn btn-secondary" style="padding:0.5rem 0.9rem;font-size:0.82rem" onclick="addRule('sender')">+ הוסף</button>
+        </div>
+        <div id="blocked-senders-list" style="margin-top:0.6rem;display:flex;flex-wrap:wrap;gap:0.4rem"></div>
+      </div>
+      <div>
+        <label>חסום נושא (מילת מפתח)</label>
+        <div style="display:flex;gap:0.5rem;margin-top:0.4rem">
+          <input type="text" id="block-keyword-input" placeholder="למשל: ניוזלטר, עדכון שבועי" style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.5rem 0.8rem;color:var(--text);font-family:inherit;font-size:0.85rem;outline:none">
+          <button class="btn btn-secondary" style="padding:0.5rem 0.9rem;font-size:0.82rem" onclick="addRule('keyword')">+ הוסף</button>
+        </div>
+        <div id="blocked-keywords-list" style="margin-top:0.6rem;display:flex;flex-wrap:wrap;gap:0.4rem"></div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div style="margin-bottom:0.8rem">
+      <label style="font-size:0.8rem;color:var(--muted);font-weight:600;letter-spacing:0.05em;text-transform:uppercase">📧 התעלם ממיילים ספציפיים (לפי כתובת שולח מלאה)</label>
+      <div style="display:flex;gap:0.5rem;margin-top:0.5rem">
+        <input type="text" id="ignore-email-input" placeholder="למשל: no-reply@example.com" style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:0.5rem 0.8rem;color:var(--text);font-family:inherit;font-size:0.85rem;outline:none">
+        <button class="btn btn-secondary" style="padding:0.5rem 0.9rem;font-size:0.82rem" onclick="addIgnoredEmail()">+ הוסף</button>
+      </div>
+      <div id="ignored-emails-list" style="margin-top:0.6rem;display:flex;flex-wrap:wrap;gap:0.4rem"></div>
+    </div>
+    <div style="font-size:0.75rem;color:var(--muted)">כל הכללים נשמרים אוטומטית לסריקות הבאות</div>
+  </div>
+
+  <!-- Progress -->
+  <div class="card" id="scan-progress">
+    <div class="card-title">⚡ מתבצעת סריקה...</div>
+    <div class="progress-stats">
+      <span id="progress-count">0 / 0</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    <div class="current-email" id="current-email">מאתחל...</div>
+    <div style="margin-top:1rem">
+      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.5rem">לוג פעילות:</div>
+      <div class="log-box" id="log-box"></div>
+    </div>
+    <div style="margin-top:1rem;display:flex;gap:0.75rem;flex-wrap:wrap" id="scan-counters">
+      <span class="badge badge-success" id="found-badge">✅ נמצאו: 0</span>
+      <span class="badge badge-warn" id="suspicious-badge">⚠️ חשודים: 0</span>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results-section" style="{% if not results %}display:none{% endif %}">
+    <div class="results-grid">
+      <!-- Confirmed Invoices -->
+      <div class="card">
+        <div class="section-header">
+          <div class="card-title">✅ חשבוניות שנמצאו</div>
+          <span class="badge badge-success" id="invoice-count">0</span>
+        </div>
+        <div class="invoice-list" id="invoices-list">
+          <div class="empty-state">עוד לא הורצה סריקה</div>
+        </div>
+        <div class="divider"></div>
+        <button class="btn btn-success" id="download-all-btn" onclick="downloadAll()" style="width:100%;justify-content:center" disabled>
+          📦 הורד את כל הקבצים (ZIP)
+        </button>
+      </div>
+
+      <!-- Suspicious -->
+      <div class="card">
+        <div class="section-header">
+          <div class="card-title">⚠️ מיילים חשודים</div>
+          <span class="badge badge-warn" id="suspicious-count">0</span>
+        </div>
+        <div class="invoice-list" id="suspicious-list">
+          <div class="empty-state">עוד לא הורצה סריקה</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if results %}
+  <div class="card" style="margin-top:0">
+    <div class="card-title">📊 סריקה אחרונה</div>
+    <div style="font-size:0.85rem;color:var(--muted)">
+      תאריך: {{ results.scan_date[:10] }} ⋅
+      סרוקו: {{ results.total_scanned }} מיילים ⋅
+      מ: {{ results.start_date }}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+<script>
+let scanInterval = null;
+let finalResults = null;
+
+{% if results %}
+  // Load previous results on page load
+  window.addEventListener('load', () => {
+    const prevResults = {{ results | tojson }};
+    if (prevResults) {
+      displayResults(prevResults.found_invoices || [], prevResults.suspicious_emails || []);
+    }
+  });
+{% endif %}
+
+function startScan() {
+  const date = document.getElementById('start-date').value;
+  if (!date) { alert('בחר תאריך התחלה'); return; }
+
+  document.getElementById('scan-progress').style.display = 'block';
+  document.getElementById('scan-btn').disabled = true;
+  document.getElementById('log-box').innerHTML = '';
+
+  fetch('/scan', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({start_date: date, end_date: document.getElementById('end-date').value || null})
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.error) {
+      alert('שגיאה: ' + data.error);
+      document.getElementById('scan-btn').disabled = false;
+      return;
+    }
+    scanInterval = setInterval(pollStatus, 2000);
+  })
+  .catch(e => {
+    alert('שגיאת חיבור: ' + e);
+    document.getElementById('scan-btn').disabled = false;
+  });
+}
+
+function pollStatus() {
+  fetch('/status')
+  .then(r => r.json())
+  .then(s => {
+    document.getElementById('progress-bar').style.width = s.progress + '%';
+    document.getElementById('progress-pct').textContent = s.progress + '%';
+    document.getElementById('progress-count').textContent = s.processed + ' / ' + s.total;
+    document.getElementById('current-email').textContent = s.current_email || '';
+    document.getElementById('found-badge').textContent = '✅ נמצאו: ' + s.found_count;
+    document.getElementById('suspicious-badge').textContent = '⚠️ חשודים: ' + s.suspicious_count;
+
+    const logBox = document.getElementById('log-box');
+    logBox.innerHTML = '';
+    (s.log || []).forEach(line => {
+      const p = document.createElement('p');
+      p.textContent = line;
+      if (line.includes('✅')) p.className = 'log-success';
+      else if (line.includes('⚠️')) p.className = 'log-warn';
+      else if (line.includes('❌')) p.className = 'log-error';
+      logBox.appendChild(p);
+    });
+    logBox.scrollTop = logBox.scrollHeight;
+
+    if (s.done) {
+      clearInterval(scanInterval);
+      document.getElementById('scan-btn').disabled = false;
+      if (s.error) {
+        alert('שגיאה בסריקה: ' + s.error);
+      } else {
+        loadResults();
+      }
+    }
+  });
+}
+
+function loadResults() {
+  fetch('/results')
+  .then(r => r.json())
+  .then(data => {
+    displayResults(data.found_invoices || [], data.suspicious_emails || []);
+  });
+}
+
+function displayResults(invoices, suspicious) {
+  const section = document.getElementById('results-section');
+  section.style.display = 'block';
+  section.scrollIntoView({behavior:'smooth'});
+
+  document.getElementById('invoice-count').textContent = invoices.length;
+  document.getElementById('suspicious-count').textContent = suspicious.length;
+
+  renderList('invoices-list', invoices, false);
+  renderList('suspicious-list', suspicious, true);
+
+  const hasFiles = invoices.some(i => i.saved_files && i.saved_files.length > 0);
+  document.getElementById('download-all-btn').disabled = !hasFiles;
+}
+
+function renderList(listId, items, isSuspicious) {
+  const el = document.getElementById(listId);
+  if (!items || items.length === 0) {
+    el.innerHTML = '<div class="empty-state">לא נמצאו פריטים</div>';
+    return;
+  }
+
+  el.innerHTML = items.map(item => {
+    const conf = item.confidence || 0;
+    const confClass = conf >= 70 ? 'high' : conf >= 40 ? 'mid' : 'low';
+    const dateStr = (item.date || '').substring(0, 16);
+
+    let filesHtml = '';
+    if (item.saved_files && item.saved_files.length > 0) {
+      filesHtml = item.saved_files.map(f =>
+        `<a class="file-chip" href="/download/${encodeURIComponent(f.saved)}" target="_blank">
+          📎 ${f.original}
+        </a>`
+      ).join('');
+    }
+
+    let linksHtml = '';
+    if (item.invoice_links && item.invoice_links.length > 0) {
+      linksHtml = item.invoice_links.slice(0, 2).map(l =>
+        `<a class="btn-xs btn-xs-warn" href="${l}" target="_blank">🔗 לינק לחשבונית</a>`
+      ).join('');
+    }
+
+    const nameHtml = item.name_found ? `<span title="${item.name_found}">👤 ${item.name_found}</span>` : '';
+
+    return `<div class="invoice-item ${isSuspicious ? 'suspicious' : ''}" id="item-${item.id}">
+      <div class="item-subject">${escHtml(item.subject)}</div>
+      <div class="item-meta">
+        <span>📧 ${escHtml(item.sender.substring(0, 40))}</span>
+        <span>📅 ${dateStr}</span>
+        ${nameHtml}
+      </div>
+      <div class="confidence-bar">
+        <span style="font-size:0.7rem;color:var(--muted)">ביטחון ${conf}%</span>
+        <div class="conf-bar">
+          <div class="conf-fill ${confClass}" style="width:${conf}%"></div>
+        </div>
+      </div>
+      <div class="item-actions">
+        <a class="btn-xs btn-xs-primary" href="${item.gmail_link}" target="_blank">📬 פתח ב-Gmail</a>
+        ${linksHtml}
+      </div>
+      ${filesHtml ? '<div style="margin-top:0.4rem">' + filesHtml + '</div>' : ''}
+      ${item.reason ? `<div style="font-size:0.72rem;color:var(--muted);margin-top:0.5rem">${escHtml(item.reason)}</div>` : ''}
+      <div style="display:flex;gap:0.5rem;margin-top:0.75rem;padding-top:0.65rem;border-top:1px solid var(--border)">
+        <button class="btn-xs btn-xs-success" onclick="sendFeedback('${item.id}','confirm','${escHtml(item.subject).replace(/'/g,"\'")}','${escHtml(item.sender).replace(/'/g,"\'")}')">✅ חשבונית נכונה</button>
+        <button class="btn-xs" style="background:rgba(220,38,38,0.15);color:#fca5a5" onclick="sendFeedback('${item.id}','reject','${escHtml(item.subject).replace(/'/g,"\'")}','${escHtml(item.sender).replace(/'/g,"\'")}')">❌ לא חשבונית — הסר</button>
+        <button class="btn-xs btn-xs-warn" onclick="quickBlockSender('${escHtml(item.sender).replace(/'/g,"\'")}')">🚫 חסום שולח זה</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function downloadAll() {
+  window.location.href = '/download_all';
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function sendFeedback(id, action, subject, sender) {
+  fetch('/feedback', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({id, action, subject, sender})
+  }).then(r => r.json()).then(() => {
+    const el = document.getElementById('item-' + id);
+    if (el) {
+      if (action === 'reject') {
+        el.style.transition = 'all 0.3s';
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(20px)';
+        setTimeout(() => el.remove(), 300);
+      } else {
+        el.style.borderColor = 'var(--accent3)';
+        el.querySelectorAll('button').forEach(b => b.disabled = true);
+        const fb = el.querySelector('.feedback-row');
+        if (fb) fb.innerHTML = '<span style="color:var(--accent3);font-size:0.75rem">✅ סומן כחשבונית נכונה</span>';
+      }
+    }
+  });
+}
+
+function quickBlockSender(sender) {
+  const short = sender.replace(/<.*>/, '').trim();
+  document.getElementById('block-sender-input').value = short;
+  addRule('sender');
+  document.getElementById('rules-card').scrollIntoView({behavior:'smooth'});
+}
+
+function addRule(type) {
+  const inputId = type === 'sender' ? 'block-sender-input' : 'block-keyword-input';
+  const value = document.getElementById(inputId).value.trim();
+  if (!value) return;
+
+  fetch('/rules', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({action: 'add', type, value})
+  }).then(r => r.json()).then(data => {
+    document.getElementById(inputId).value = '';
+    renderRules(data.rules);
+  });
+}
+
+function removeRule(type, value) {
+  fetch('/rules', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({action: 'remove', type, value})
+  }).then(r => r.json()).then(data => renderRules(data.rules));
+}
+
+function renderRules(rules) {
+  const sendersList = document.getElementById('blocked-senders-list');
+  const keywordsList = document.getElementById('blocked-keywords-list');
+
+  sendersList.innerHTML = (rules.blocked_senders || []).map(s =>
+    `<span style="display:inline-flex;align-items:center;gap:0.3rem;background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.2);border-radius:6px;padding:0.2rem 0.5rem;font-size:0.75rem;color:#fca5a5">
+      ${escHtml(s)} <span style="cursor:pointer;opacity:0.7" onclick="removeRule('sender','${escHtml(s)}')">✕</span>
+    </span>`
+  ).join('');
+
+  keywordsList.innerHTML = (rules.blocked_keywords || []).map(k =>
+    `<span style="display:inline-flex;align-items:center;gap:0.3rem;background:rgba(245,200,66,0.1);border:1px solid rgba(245,200,66,0.2);border-radius:6px;padding:0.2rem 0.5rem;font-size:0.75rem;color:var(--gold)">
+      ${escHtml(k)} <span style="cursor:pointer;opacity:0.7" onclick="removeRule('keyword','${escHtml(k)}')">✕</span>
+    </span>`
+  ).join('');
+
+  const ignoredEl = document.getElementById('ignored-emails-list');
+  if (ignoredEl) {
+    ignoredEl.innerHTML = (rules.ignored_emails || []).map(e =>
+      `<span style="display:inline-flex;align-items:center;gap:0.3rem;background:rgba(108,99,255,0.1);border:1px solid rgba(108,99,255,0.2);border-radius:6px;padding:0.2rem 0.5rem;font-size:0.75rem;color:var(--accent)">
+        📧 ${escHtml(e)} <span style="cursor:pointer;opacity:0.7" onclick="removeIgnoredEmail('${escHtml(e)}')">✕</span>
+      </span>`
+    ).join('');
+  }
+}
+
+// Load rules on page load
+window.addEventListener('load', () => {
+  fetch('/rules').then(r => r.json()).then(rules => renderRules(rules));
+});
+
+function addIgnoredEmail() {
+  const val = document.getElementById('ignore-email-input').value.trim();
+  if (!val) return;
+  fetch('/rules', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({action: 'add', type: 'ignored_email', value: val})
+  }).then(r => r.json()).then(data => {
+    document.getElementById('ignore-email-input').value = '';
+    renderRules(data.rules);
+  });
+}
+
+function removeIgnoredEmail(val) {
+  fetch('/rules', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({action: 'remove', type: 'ignored_email', value: val})
+  }).then(r => r.json()).then(data => renderRules(data.rules));
+}
+</script>
+</body>
+</html>
