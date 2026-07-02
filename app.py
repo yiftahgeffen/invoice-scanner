@@ -229,11 +229,11 @@ STRONG_INVOICE_INDICATORS_EN = [
 # We do NOT want these - Yiftach issued them, they are income invoices
 OUTGOING_INVOICE_PATTERNS = [
     # Invoice issued BY Yiftach Gefen TO a client
-    r'(?:חשבונית|invoice).*(?:מאת|from|by)\s*(?:יפתח\s*גפן|yiftah?\s*gaf?en)',
-    r'(?:יפתח\s*גפן|yiftah?\s*gaf?en).*(?:לכבוד|to|to:)',
+    r'(?:חשבונית|invoice).*(?:מאת|\bfrom\b|\bby\b)\s*(?:יפתח\s*גפן|yiftah?\s*gaf?en)',
+    r'(?:יפתח\s*גפן|yiftah?\s*gaf?en).*(?:לכבוד|\bto\b|\bto:\b)',
     # Subject patterns like "חשבונית מס 20027 מאת יפתח גפן"
     r'חשבונית.*מאת.*(?:יפתח|גפן)',
-    r'invoice.*from.*(?:yiftah?|gafen)',
+    r'invoice.*\bfrom\b.*(?:yiftah?|gafen)',
 ]
 
 INVOICE_FILE_PATTERNS = [
